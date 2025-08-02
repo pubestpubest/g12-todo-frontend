@@ -4,10 +4,10 @@ services:
     container_name: ${PROJECT_NAME}-frontend
     build: .
     ports:
-      - ${NGINX_PORT}:5173
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
     environment:
-      - NGINX_PROXY=${NGINX_PROXY}
-      - NGINX_PORT=${NGINX_PORT}
+      - NGINX_PROXY=http://${PROJECT_NAME}-backend:3000
+      - NGINX_PORT=${FRONTEND_PORT}
     networks:
       - pf-net
 networks:
