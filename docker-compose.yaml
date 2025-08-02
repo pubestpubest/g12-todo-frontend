@@ -4,10 +4,12 @@ services:
     container_name: ${PROJECT_NAME}-frontend
     build: .
     ports:
-      - ${FRONTEND_PORT}:${FRONTEND_PORT}
+      - ${VITE_FRONTEND_PORT}:${VITE_FRONTEND_PORT}
     environment:
-      - NGINX_PROXY=http://${PROJECT_NAME}-backend:${BACKEND_PORT}
-      - NGINX_PORT=${FRONTEND_PORT}
+      - NGINX_PROXY=http://${PROJECT_NAME}-backend:${VITE_BACKEND_PORT}
+      - NGINX_PORT=${VITE_FRONTEND_PORT}
+      - VITE_FRONTEND_PORT=${VITE_FRONTEND_PORT}
+      - VITE_BACKEND_PORT=${VITE_BACKEND_PORT}
     networks:
       - pf-net
 networks:
