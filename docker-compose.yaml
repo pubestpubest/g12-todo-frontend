@@ -1,0 +1,16 @@
+name: ${PROJECT_NAME}
+services:
+  frontend:
+    container_name: ${PROJECT_NAME}-frontend
+    build: .
+    ports:
+      - ${NGINX_PORT}:5173
+    environment:
+      - NGINX_PROXY=${NGINX_PROXY}
+      - NGINX_PORT=${NGINX_PORT}
+    networks:
+      - pf-net
+networks:
+  pf-net:
+    name: ${PROJECT_NAME}-net
+    external: true
