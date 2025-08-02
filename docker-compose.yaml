@@ -6,7 +6,7 @@ services:
     ports:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
     environment:
-      - NGINX_PROXY=http://${PROJECT_NAME}-backend:3000
+      - NGINX_PROXY=http://${PROJECT_NAME}-backend:${BACKEND_PORT}
       - NGINX_PORT=${FRONTEND_PORT}
     networks:
       - pf-net
