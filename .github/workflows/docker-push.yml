@@ -40,3 +40,9 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: pubest/g12-todo-frontend:latest
+      - name: Trigger remote webhook deploy
+        run: |
+          curl -X POST ${{ secrets.WEBHOOK_URL }} \
+            -H 'Content-Type: application/json' \
+            -H 'X-Hub-Signature-256: sha256='$(echo -n '{}' | openssl dgst -sha256 -hmac "${{ secrets.WEBHOOK_SECRET }}" | sed 's/^.* //') \
+            -d '{}'
