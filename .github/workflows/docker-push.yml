@@ -44,7 +44,7 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         with:
-          args: "🚀 Code has been built and pushed to Docker Hub successfully."
+          args: "✅ ${{ github.repository }} has been built and pushed to Docker Hub."
           
       - name: Trigger remote webhook deploy
         run: |
