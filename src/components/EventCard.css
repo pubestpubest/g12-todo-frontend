@@ -1,0 +1,105 @@
+.event-card {
+  padding: 16px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  border-left: 4px solid;
+  transition: box-shadow 0.3s ease;
+}
+
+.event-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Status-based colors */
+.event-card.completed {
+  border-left-color: #10b981; /* green */
+}
+
+.event-card.pending {
+  border-left-color: #3b82f6; /* blue */
+}
+
+.event-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: -20px;
+}
+
+.event-card-text {
+  max-width: 80%;
+}
+
+.event-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 0 8px;
+  text-decoration: none;
+}
+
+.event-card.completed .event-title {
+  text-decoration: line-through;
+  color: #9ca3af; /* gray */
+}
+
+.event-description {
+  color: #4b5563;
+  margin: 4px 0;
+}
+
+.event-startdate {
+  font-size: 16px;
+  color: #000000;
+}
+
+.event-enddate {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: -20px;
+  margin-left: 25px;
+}
+
+.event-location {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: -10px;
+}
+
+.event-divider {
+  border: none;
+  border-top: 1px solid #d1d5db; /* เทาอ่อน */
+  margin: 12px 0;
+  width: 100%;
+}
+
+.event-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edit-button,
+.delete-button {
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.edit-button:hover {
+  color: #111827;
+}
+
+.delete-button:hover {
+  color: #ef4444;
+}
+
+.event-meta {
+  font-size: 12px;
+  color: #9ca3af; /* เทาอ่อน */
+  margin-top: 1px;
+  margin-bottom: 0px;
+}

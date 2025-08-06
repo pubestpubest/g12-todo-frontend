@@ -1,83 +1,59 @@
-import { useState } from "react";
-import axios from "axios";
-import type { Task } from "./Type";
-import { TaskModal } from "./components";
+import { useEffect, useState } from "react";
+import DashboardHeader from "./components/DashboardHeader";
+import EventList from "./components/EventList";
+import type { Event } from "./Type"; // หรือประกาศในไฟล์เดียว
 import "./App.css";
 
-function App() {
-  const [taskId, setTaskId] = useState("");
-  const [taskData, setTaskData] = useState<Task | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+const App = () => {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const fetchTask = async () => {
-    if (!taskId.trim()) {
-      setError("Please enter a task ID");
-      return;
-    }
+  useEffect(() => {
+    // Mock fetch data (ตอนนี้ใช้ mock, อนาคตค่อยเปลี่ยนเป็น fetch API)
+    const fetchEvents = async () => {
+      setLoading(true);
 
-    setIsLoading(true);
-    setError(null);
+      const mockData: Event[] = [
+        {
+          id: 1,
+          title: "Final Presentation",
+          description: "Present final project to instructor",
+          complete: true,
+          createdAt: "2025-08-01T09:00:00Z",
+          updatedAt: "2025-08-03T13:00:00Z",
+          location: "Room 402, Engineering Bldg",
+          startTime: "2025-08-10T13:00:00Z",
+          endTime: "2025-08-10T15:00:00Z",
+        },
+        {
+          id: 2,
+          title: "Study Group",
+          complete: false,
+          location: "Library",
+          startTime: "2025-08-12T19:00:00Z",
+          endTime: "2025-08-12T21:00:00Z",
+        },
+      ];
 
-    try {
-      const response = await axios.get<Task>(`/api/v1/tasks/${taskId}`);
-      setTaskData(response.data);
-      setIsModalOpen(true);
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || "Failed to fetch task");
-      } else {
-        setError("An unexpected error occurred");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      setTimeout(() => {
+        setEvents(mockData);
+        setLoading(false);
+      }, 500); // Mock delay
+    };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setTaskData(null);
-  };
+    fetchEvents();
+  }, []);
+
+  const total = events.length;
+  const completed = events.filter((e) => e.complete).length;
+  const pending = total - completed;
 
   return (
-    <div className="app-container">
-      <header>
-        <h1>Task Fetcher</h1>
-      </header>
-
-      <div className="input-container">
-        <input
-          type="text"
-          placeholder="Enter Task ID"
-          value={taskId}
-          onChange={(e) => setTaskId(e.target.value)}
-          className="task-input"
-          onKeyDown={(e) => e.key === "Enter" && fetchTask()}
-        />
-
-        <button
-          className="fetch-button"
-          onClick={fetchTask}
-          disabled={isLoading}
-        >
-          {isLoading ? "Loading..." : "Fetch Task"}
-        </button>
-
-        {error && (
-          <div className="error-message" role="alert">
-            {error}
-          </div>
-        )}
-      </div>
-
-      <TaskModal
-        isOpen={isModalOpen}
-        taskData={taskData}
-        onClose={closeModal}
-      />
+    <div className="min-h-screen bg-gray-100 p-6">
+      <DashboardHeader total={total} completed={completed} pending={pending} />
+      {loading ? <p>Loading...</p> : <EventList events={events} />}
     </div>
   );
-}
+};
 
 export default App;
