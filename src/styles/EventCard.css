@@ -1,15 +1,16 @@
 .event-card {
   padding: 16px;
-  background-color: white;
+  background-color: var(--card-bg);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--card-shadow);
   margin-bottom: 16px;
   border-left: 4px solid;
   transition: box-shadow 0.3s ease;
+  color: var(--text-primary);
 }
 
 .event-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--card-hover-shadow);
 }
 
 /* Status-based colors */
@@ -45,31 +46,31 @@
 }
 
 .event-description {
-  color: #4b5563;
+  color: var(--text-secondary);
   margin: 4px 0;
 }
 
 .event-startdate {
   font-size: 16px;
-  color: #000000;
+  color: var(--text-primary);
 }
 
 .event-enddate {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin-top: -20px;
   margin-left: 25px;
 }
 
 .event-location {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin-top: -10px;
 }
 
 .event-divider {
   border: none;
-  border-top: 1px solid #d1d5db; /* เทาอ่อน */
+  border-top: 1px solid var(--border-color);
   margin: 12px 0;
   width: 100%;
 }
@@ -86,11 +87,12 @@
   background: transparent;
   font-size: 16px;
   cursor: pointer;
-  color: #6b7280;
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
 }
 
 .edit-button:hover {
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .delete-button:hover {
@@ -99,7 +101,8 @@
 
 .event-meta {
   font-size: 12px;
-  color: #9ca3af; /* เทาอ่อน */
+  color: var(--text-secondary);
   margin-top: 1px;
   margin-bottom: 0px;
+  opacity: 0.8;
 }

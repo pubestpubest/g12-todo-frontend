@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import NavBar from "@components/NavBar";
 import DashboardHeader from "@components/DashboardHeader";
 import EventList from "@components/EventList";
 import type { Event } from "types/EventType";
@@ -26,10 +27,13 @@ const App = () => {
   const pending = total - completed;
 
   return (
-    <div className="app-container" >
-      <DashboardHeader total={total} completed={completed} pending={pending} />
-      {loading ? <p>Loading...</p> : <EventList events={events} />}
-    </div>
+    <>
+      <NavBar />
+      <div className="app-container" >
+        <DashboardHeader total={total} completed={completed} pending={pending} />
+        {loading ? <p>Loading...</p> : <EventList events={events} />}
+      </div>
+    </>
   );
 };
 

@@ -37,7 +37,6 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   return (
     <div className="dashboard-header-container">
       <div className="dashboard-header-text">
-        <h1 className="dashboard-header-title">Events Dashboard</h1>
         <p className="dashboard-header-subtitle">
           Manage and view your upcoming events
         </p>
