@@ -1,5 +1,3 @@
-/* src/components/DashboardHeader/DashboardHeader.css */
-
 /* --- General Container Styles --- */
 .dashboard-header-container {
   margin-bottom: 2rem; /* mb-8 */
@@ -9,7 +7,7 @@
 .dashboard-header-title {
   font-size: 1.875rem; /* text-3xl */
   font-weight: 700; /* font-bold */
-  color: #1f2937; /* text-gray-800 */
+  color: var(--text-color); /* text-gray-800 */
 }
 
 .dashboard-header-subtitle {
@@ -35,7 +33,7 @@
 /* --- Stat Card Styles --- */
 .stat-card {
   position: relative;
-  background-color: #fff;
+  background-color: var(--card-bg);
   padding: 1.5rem; /* p-6 */
   border-radius: 0.5rem; /* rounded-lg */
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
@@ -67,10 +65,8 @@
 }
 
 .stat-card__label {
-  color: #4b5563; /* text-gray-600 */
+  color: var(--text-color); /* text-gray-600 */
 }
-
-/* --- Modifier Colors for Stat Cards --- */
 
 /* Completed */
 .stat-card--completed .stat-card__border {
@@ -95,5 +91,5 @@
 }
 .stat-card--total .stat-card__value {
   /* default color, no specific color class needed */
-  color: #1f2937; /* text-gray-800 */
+  color: var(--text-color); /* text-gray-800 */
 }

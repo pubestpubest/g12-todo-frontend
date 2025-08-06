@@ -9,49 +9,66 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock fetch data (ตอนนี้ใช้ mock, อนาคตค่อยเปลี่ยนเป็น fetch API)
-    const fetchEvents = async () => {
-      setLoading(true);
-
-      const mockData: Event[] = [
-        {
-          id: 1,
-          title: "Final Presentation",
-          description: "Present final project to instructor",
-          complete: true,
-          createdAt: "2025-08-01T09:00:00Z",
-          updatedAt: "2025-08-03T13:00:00Z",
-          location: "Room 402, Engineering Bldg",
-          startTime: "2025-08-10T13:00:00Z",
-          endTime: "2025-08-10T15:00:00Z",
-        },
-        {
-          id: 2,
-          title: "Study Group",
-          complete: false,
-          location: "Library",
-          startTime: "2025-08-12T19:00:00Z",
-          endTime: "2025-08-12T21:00:00Z",
-        },
-      ];
-
-      setTimeout(() => {
-        setEvents(mockData);
-        setLoading(false);
-      }, 500); // Mock delay
-    };
-
     fetchEvents();
   }, []);
+
+  const fetchEvents = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:3000/v1/tasks");
+      if (!response.ok) throw new Error("Failed to fetch");
+      const data = await response.json();
+      console.log(data.data);
+      setEvents(data.data);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateEvent = async (updatedEvent: Event) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/events/${updatedEvent.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedEvent),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to update event");
+
+      const result = await response.json();
+      setEvents((prev) => prev.map((e) => (e.id === result.id ? result : e)));
+    } catch (error) {
+      console.error("Update failed:", error);
+    }
+  };
+
+  const handleDeleteEvent = (id: number) => {
+    setEvents((prev) => prev.filter((e) => e.id !== id));
+  };
 
   const total = events.length;
   const completed = events.filter((e) => e.complete).length;
   const pending = total - completed;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="app-container">
       <DashboardHeader total={total} completed={completed} pending={pending} />
-      {loading ? <p>Loading...</p> : <EventList events={events} />}
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <EventList
+          events={events}
+          onUpdate={handleUpdateEvent}
+          onDelete={handleDeleteEvent}
+        />
+      )}
     </div>
   );
 };

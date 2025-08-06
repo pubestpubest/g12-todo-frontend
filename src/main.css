@@ -1,0 +1,28 @@
+:root {
+  --bg-color: #ffffff;
+  --text-color: #111827;
+  --subtext-color: #6b7280;
+  --card-bg: #ffffff;
+  --divider-color: #d1d5db;
+  --button-hover: #111827;
+  --delete-hover: #ef4444;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #111827;
+    --text-color: #ffffff;
+    --subtext-color: #9ca3af;
+    --card-bg: #1f2937;
+    --divider-color: #374151;
+    --button-hover: #ffffff;
+    --delete-hover: #f87171;
+  }
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: sans-serif;
+  margin: 0;
+}
