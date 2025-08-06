@@ -1,7 +1,7 @@
 // src/components/DashboardHeader/DashboardHeader.tsx
 
 import React from "react";
-import "./DashboardHeader.css";
+import "@styles/DashboardHeader.css";
 
 // Interface สำหรับ Props ของ StatCard
 interface StatCardProps {

@@ -1,51 +1,28 @@
-import { useEffect, useState } from "react";
-import DashboardHeader from "./components/DashboardHeader";
-import EventList from "./components/EventList";
-import type { Event } from "./Type"; // หรือประกาศในไฟล์เดียว
-import "./App.css";
+import { useEffect } from "react";
+import DashboardHeader from "@components/DashboardHeader";
+import EventList from "@components/EventList";
+import type { Event } from "types/EventType";
+import type { ApiResponse } from "types/ResponseType";
+import "@styles/App.css";
+import { useAxios } from "@hooks/useAxios";
 
 const App = () => {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
+
+  const { data: apiResponse, loading, sendRequest } = useAxios<ApiResponse<Event[]>>({
+    url: "/api/v1/events",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   useEffect(() => {
-    // Mock fetch data (ตอนนี้ใช้ mock, อนาคตค่อยเปลี่ยนเป็น fetch API)
-    const fetchEvents = async () => {
-      setLoading(true);
-
-      const mockData: Event[] = [
-        {
-          id: 1,
-          title: "Final Presentation",
-          description: "Present final project to instructor",
-          complete: true,
-          createdAt: "2025-08-01T09:00:00Z",
-          updatedAt: "2025-08-03T13:00:00Z",
-          location: "Room 402, Engineering Bldg",
-          startTime: "2025-08-10T13:00:00Z",
-          endTime: "2025-08-10T15:00:00Z",
-        },
-        {
-          id: 2,
-          title: "Study Group",
-          complete: false,
-          location: "Library",
-          startTime: "2025-08-12T19:00:00Z",
-          endTime: "2025-08-12T21:00:00Z",
-        },
-      ];
-
-      setTimeout(() => {
-        setEvents(mockData);
-        setLoading(false);
-      }, 500); // Mock delay
-    };
-
-    fetchEvents();
+    sendRequest();
   }, []);
 
-  const total = events.length;
-  const completed = events.filter((e) => e.complete).length;
+  const events = apiResponse?.data || [];
+  const total = Array.isArray(events) ? events.length : 0;
+  const completed = Array.isArray(events) ? events.filter((e: Event) => e.complete).length : 0;
   const pending = total - completed;
 
   return (

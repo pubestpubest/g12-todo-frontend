@@ -1,5 +1,5 @@
-import type { Event } from "../Type";
-import "./EventCard.css";
+import type { Event } from "types/EventType";
+import "@styles/EventCard.css";
 
 interface EventCardProps {
   event: Event;
@@ -38,7 +38,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
       </div>
       <hr className="event-divider" />
       <p className="event-meta">Created: {formatDate(event.createdAt!)}</p>
-      <p className="event-meta">Updated: {formatDate(event.updatedAt!)}</p>
+      <p className="event-meta">Updated: {formatDate(event.updateAt!)}</p>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
 import type { ConfigEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
+import path from "path";
 
 export default ({ mode }: ConfigEnv) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
@@ -9,6 +10,17 @@ export default ({ mode }: ConfigEnv) => {
   const frontendPort = process.env.VITE_FRONTEND_PORT || "5103";
   return defineConfig({
     plugins: [react()],
+    resolve: {
+      alias: {
+        "@components": path.resolve(__dirname, "src/components"),
+        "@pages": path.resolve(__dirname, "src/pages"),
+        "@hooks": path.resolve(__dirname, "src/hooks"),
+        "@utils": path.resolve(__dirname, "src/utils"),
+        "@styles": path.resolve(__dirname, "src/styles"),
+        "@assets": path.resolve(__dirname, "src/assets"),
+        "@types": path.resolve(__dirname, "src/types"),
+      },
+    },
     server: {
       proxy: {
         "/api": {

@@ -1,8 +1,8 @@
-import type { Task } from "../Type";
+import type { Event } from "types/EventType";
 
 interface TaskModalProps {
   isOpen: boolean;
-  taskData: Task | null;
+  taskData: Event | null;
   onClose: () => void;
 }
 
@@ -22,38 +22,38 @@ export function TaskModal({ isOpen, taskData, onClose }: TaskModalProps) {
         </header>
 
         <div className="modal-field">
-          <strong>Status:</strong> {taskData.status}
+          <strong>Status:</strong> {taskData.complete}
         </div>
 
         <div className="modal-field">
-          <strong>Message:</strong> {taskData.message}
+          <strong>Message:</strong> {taskData.description}
         </div>
 
         <div className="modal-field">
-          <strong>Task ID:</strong> {taskData.data.taskId}
+          <strong>Event ID:</strong> {taskData.eventId}
         </div>
 
         <div className="modal-field">
-          <strong>Title:</strong> {taskData.data.title}
+          <strong>Event Title:</strong> {taskData.title}
         </div>
 
         <div className="modal-field">
-          <strong>Description:</strong> {taskData.data.description}
+          <strong>Event Description:</strong> {taskData.description}
         </div>
 
         <div className="modal-field">
           <strong>Status:</strong>{" "}
-          {taskData.data.status ? "Completed" : "Pending"}
+          {taskData.complete ? "Completed" : "Pending"}
         </div>
 
         <div className="modal-field">
           <strong>Created At:</strong>{" "}
-          {new Date(taskData.data.createdAt).toLocaleString()}
+          {new Date(taskData.createdAt || "").toLocaleString()}
         </div>
 
         <div className="modal-field">
           <strong>Updated At:</strong>{" "}
-          {new Date(taskData.data.updateAt).toLocaleString()}
+          {new Date(taskData.updateAt || "").toLocaleString()}
         </div>
       </article>
     </div>
