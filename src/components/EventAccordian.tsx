@@ -24,7 +24,7 @@ const EventAccordian: React.FC<EventAccordianProps> = ({
     setIsExpanded(!isExpanded);
   };
 
-  const handleToggleComplete = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleToggleComplete = () => {
     onToggleComplete?.(event.eventId);
   };
 
