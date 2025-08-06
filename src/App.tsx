@@ -26,7 +26,7 @@ const App = () => {
   const pending = total - completed;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="app-container" >
       <DashboardHeader total={total} completed={completed} pending={pending} />
       {loading ? <p>Loading...</p> : <EventList events={events} />}
     </div>

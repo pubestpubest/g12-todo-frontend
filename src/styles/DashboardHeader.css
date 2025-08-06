@@ -3,6 +3,7 @@
 /* --- General Container Styles --- */
 .dashboard-header-container {
   margin-bottom: 2rem; /* mb-8 */
+  width: 100%;
 }
 
 /* --- Header Text Styles --- */
