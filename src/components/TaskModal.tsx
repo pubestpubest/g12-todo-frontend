@@ -1,13 +1,13 @@
 import type { Event } from "types/EventType";
 
-interface TaskModalProps {
+interface EventModalProps {
   isOpen: boolean;
-  taskData: Event | null;
+  eventData: Event | null;
   onClose: () => void;
 }
 
-export function TaskModal({ isOpen, taskData, onClose }: TaskModalProps) {
-  if (!isOpen || !taskData) {
+export function EventModal({ isOpen, eventData, onClose }: EventModalProps) {
+  if (!isOpen || !eventData) {
     return null;
   }
 
@@ -22,38 +22,38 @@ export function TaskModal({ isOpen, taskData, onClose }: TaskModalProps) {
         </header>
 
         <div className="modal-field">
-          <strong>Status:</strong> {taskData.complete}
+          <strong>Status:</strong> {eventData.complete}
         </div>
 
         <div className="modal-field">
-          <strong>Message:</strong> {taskData.description}
+          <strong>Message:</strong> {eventData.description}
         </div>
 
         <div className="modal-field">
-          <strong>Event ID:</strong> {taskData.eventId}
+          <strong>Event ID:</strong> {eventData.eventId}
         </div>
 
         <div className="modal-field">
-          <strong>Event Title:</strong> {taskData.title}
+          <strong>Event Title:</strong> {eventData.title}
         </div>
 
         <div className="modal-field">
-          <strong>Event Description:</strong> {taskData.description}
+          <strong>Event Description:</strong> {eventData.description}
         </div>
 
         <div className="modal-field">
           <strong>Status:</strong>{" "}
-          {taskData.complete ? "Completed" : "Pending"}
+          {eventData.complete ? "Completed" : "Pending"}
         </div>
 
         <div className="modal-field">
           <strong>Created At:</strong>{" "}
-          {new Date(taskData.createdAt || "").toLocaleString()}
+          {new Date(eventData.createdAt || "").toLocaleString()}
         </div>
 
         <div className="modal-field">
           <strong>Updated At:</strong>{" "}
-          {new Date(taskData.updateAt || "").toLocaleString()}
+          {new Date(eventData.updateAt || "").toLocaleString()}
         </div>
       </article>
     </div>

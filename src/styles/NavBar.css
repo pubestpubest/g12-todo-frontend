@@ -51,37 +51,3 @@
   transform: scale(0.95);
 }
 
-/* CSS Variables for Light Theme */
-:root {
-  --navbar-bg: rgba(255, 255, 255, 0.9);
-  --text-primary: #1f2937;
-  --text-secondary: #6b7280;
-  --border-color: #e5e7eb;
-  --button-bg: #f9fafb;
-  --button-hover-bg: #f3f4f6;
-  --background: #ffffff;
-  --card-bg: #ffffff;
-  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-}
-
-/* Dark Theme Variables */
-.dark {
-  --navbar-bg: rgba(17, 24, 39, 0.9);
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --border-color: #374151;
-  --button-bg: #374151;
-  --button-hover-bg: #4b5563;
-  --background: #111827;
-  --card-bg: #1f2937;
-  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
-
-/* Apply theme to body */
-body {
-  background-color: var(--background);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
