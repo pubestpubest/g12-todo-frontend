@@ -1,14 +1,11 @@
-export interface Task {
-  status: string;
-  message: string;
-  data: Data;
-}
-
-export interface Data {
-  taskId: number;
+export interface Event {
+  id: number;
   title: string;
-  description: string;
-  status: boolean;
-  createdAt: Date;
-  updateAt: Date;
+  description?: string; // optional
+  complete: boolean;
+  createdAt?: string; // ISO string from backend (nullable)
+  updatedAt?: string; // same
+  location: string;
+  startTime: string; // assume ISO format
+  endTime: string;
 }
