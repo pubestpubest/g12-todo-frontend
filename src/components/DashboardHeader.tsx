@@ -43,9 +43,9 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       </div>
 
       <div className="dashboard-header-stats">
-        <StatCard label="Total Events" value={total} color="total" />
-        <StatCard label="Completed" value={completed} color="completed" />
-        <StatCard label="Pending" value={pending} color="pending" />
+        <StatCard label="Total Events" value={total} color="total" data-test="total-events" />
+        <StatCard label="Completed" value={completed} color="completed" data-test="completed-events" />
+        <StatCard label="Pending" value={pending} color="pending" data-test="pending-events" />
       </div>
     </div>
   );

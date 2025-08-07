@@ -116,7 +116,7 @@ export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: Ev
     <div className="modal-overlay" onClick={onClose}>
       <article className="modal-content" onClick={(e) => e.stopPropagation()}>
         <header className="modal-header">
-          <h2>{eventData ? 'Edit Event' : 'Create New Event'}</h2>
+          <h2 data-test="modal-title">{eventData ? 'Edit Event' : 'Create New Event'}</h2>
         </header>
 
         <form onSubmit={handleSubmit} className="event-form">
@@ -130,6 +130,7 @@ export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: Ev
               onChange={(e) => setTitle(e.target.value)}
               required
               placeholder="Enter event title"
+              data-test="title-input"
             />
           </div>
 
@@ -142,6 +143,7 @@ export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: Ev
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter event description (optional)"
               rows={3}
+              data-test="description-input"
             />
           </div>
 
@@ -155,6 +157,7 @@ export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: Ev
               onChange={(e) => setLocation(e.target.value)}
               required
               placeholder="Enter event location"
+              data-test="location-input"
             />
           </div>
 
@@ -165,6 +168,7 @@ export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: Ev
                 type="checkbox"
                 checked={complete}
                 onChange={(e) => setComplete(e.target.checked)}
+                data-test="complete-checkbox"
               />
               Mark as completed
             </label>
@@ -185,6 +189,7 @@ export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: Ev
                   dateFormat="M/d/yyyy, h:mm:ss aa"
                   placeholderText="Select start date and time"
                   className="date-picker"
+                  data-test="start-date-input"
                 />
               </div>
             </div>
@@ -204,16 +209,17 @@ export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: Ev
                   dateFormat="M/d/yyyy, h:mm:ss aa"
                   placeholderText="Select end date and time"
                   className="date-picker"
+                  data-test="end-date-input"
                 />
               </div>
             </div>
           </div>
 
           <div className="form-actions">
-            <button type="button" onClick={handleCancel} className="cancel-button">
+            <button type="button" onClick={handleCancel} className="cancel-button" data-test="cancel-button">
               Cancel
             </button>
-            <button type="submit" className="save-button">
+            <button type="submit" className="save-button" data-test="save-button">
               Save Changes
             </button>
           </div>

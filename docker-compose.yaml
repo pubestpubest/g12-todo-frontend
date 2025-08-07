@@ -10,6 +10,7 @@ services:
       - NGINX_PORT=${VITE_FRONTEND_PORT}
       - VITE_FRONTEND_PORT=${VITE_FRONTEND_PORT}
       - VITE_BACKEND_PORT=${VITE_BACKEND_PORT}
+      - VITE_BASE_URL=${VITE_BASE_URL}
     networks:
       - pf-net
 networks:

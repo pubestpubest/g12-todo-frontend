@@ -47,7 +47,7 @@ const EventAccordion: React.FC<EventAccordionProps> = ({
       className={`event-accordion ${event.complete ? "completed" : "pending"} ${isExpanded ? "expanded" : "collapsed"}`}
     >
       {/* Always visible header */}
-      <div className="event-accordion-header" onClick={handleToggleExpand}>
+      <div className="event-accordion-header" onClick={handleToggleExpand} data-test={`event-accordion-${event.eventId}`}>
         <div className="event-accordion-main">
           <div className="event-title-section">
             <input
@@ -84,7 +84,7 @@ const EventAccordion: React.FC<EventAccordionProps> = ({
           <hr className="event-divider" />
           {event.description && (
             <div className="event-description-section">
-              <h4>Description:</h4>
+              <h4 data-test="event-description-title">Description:</h4>
               <p className="event-description">{event.description}</p>
             </div>
           )}

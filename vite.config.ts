@@ -5,7 +5,7 @@ import path from "path";
 
 export default ({ mode }: ConfigEnv) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
-  const baseUrl = "http://localhost";
+  const baseUrl = process.env.VITE_BASE_URL || "http://localhost";
   const backendPort = process.env.VITE_BACKEND_PORT || "3000";
   const frontendPort = process.env.VITE_FRONTEND_PORT || "5103";
   return defineConfig({
