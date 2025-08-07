@@ -112,12 +112,57 @@ g12-todo-frontend/
 2. **View Task Details**: Task information will be displayed in a modal window
 3. **Error Handling**: Invalid task IDs or network errors will show appropriate error messages
 
+## 🧪 Testing
+
+This project uses Cypress for end-to-end testing to ensure the application works correctly across different scenarios.
+
+### Setting up Cypress
+
+1. **Install Cypress dependencies**
+
+   ```bash
+   pnpm cypress install
+   ```
+
+2. **Open Cypress Test Runner**
+
+   ```bash
+   pnpm cypress open
+   ```
+
+   This will open the Cypress Test Runner where you can:
+   - Run tests in interactive mode
+   - View test results in real-time
+   - Debug tests step by step
+
+### Running Tests
+
+- **Interactive Mode**: `pnpm cypress open` - Opens the Cypress Test Runner GUI
+- **Headless Mode**: `pnpm cypress run` - Runs tests in the terminal without GUI
+- **Specific Test**: `pnpm cypress run --spec "cypress/e2e/todo.cy.js"` - Run a specific test file
+
+### Test Structure
+
+```
+cypress/
+├── e2e/
+│   └── todo.cy.js          # End-to-end tests for todo functionality
+├── fixtures/
+│   └── example.json        # Test data fixtures
+└── support/
+    ├── commands.ts         # Custom Cypress commands
+    └── e2e.ts             # Global configuration
+```
+
 ## 🔧 Available Scripts
 
 - `pnpm dev` - Start development server with hot reload
 - `pnpm build` - Build the application for production
 - `pnpm preview` - Preview the production build locally
 - `pnpm lint` - Run ESLint to check code quality
+- `pnpm cypress install` - Install Cypress dependencies
+- `pnpm cypress open` - Open Cypress Test Runner
+- `pnpm cypress run` - Run Cypress tests in headless mode
 
 ## 🌐 API Integration
 
