@@ -1,11 +1,85 @@
+/* Theme Variables for Light Theme */
+:root {
+  /* Layout and Background */
+  --navbar-bg: rgba(255, 255, 255, 0.9);
+  --background: #ffffff;
+  --card-bg: #ffffff;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  
+  /* Text Colors */
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  
+  /* Border Colors */
+  --border-color: #e5e7eb;
+  --border-light: rgba(0, 0, 0, 0.1);
+  
+  /* Button Colors */
+  --button-bg: #f9fafb;
+  --button-hover-bg: #f3f4f6;
+  
+  /* Status Colors */
+  --success-color: #10b981;
+  --primary-color: #3b82f6;
+  --danger-color: #ef4444;
+  
+  /* Component Specific */
+  --badge-bg: rgba(59, 130, 246, 0.1);
+  --badge-border: rgba(59, 130, 246, 0.2);
+  --hover-bg: rgba(0, 0, 0, 0.02);
+  --danger-hover-bg: rgba(239, 68, 68, 0.1);
+}
+
+/* Dark Theme Variables */
+.dark {
+  /* Layout and Background */
+  --navbar-bg: rgba(17, 24, 39, 0.9);
+  --background: #111827;
+  --card-bg: #1f2937;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  
+  /* Text Colors */
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #6b7280;
+  
+  /* Border Colors */
+  --border-color: #374151;
+  --border-light: rgba(255, 255, 255, 0.1);
+  
+  /* Button Colors */
+  --button-bg: #374151;
+  --button-hover-bg: #4b5563;
+  
+  /* Status Colors */
+  --success-color: #34d399;
+  --primary-color: #60a5fa;
+  --danger-color: #f87171;
+  
+  /* Component Specific */
+  --badge-bg: rgba(96, 165, 250, 0.15);
+  --badge-border: rgba(96, 165, 250, 0.3);
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  --danger-hover-bg: rgba(248, 113, 113, 0.15);
+}
+
+/* Apply theme to body */
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 80px);
   padding: 20px;
   max-width: 1200px;
-  margin: 0 100px;
-  margin-top: 20px;
+  margin: 20px auto 0;
   background-color: var(--background);
 }
 
@@ -32,7 +106,7 @@
   padding: 8px;
   border-radius: 4px;
   width: 100%;
-  background-color: #ef4444;
+  background-color: var(--danger-color);
   color: white;
 }
 
@@ -50,9 +124,9 @@
 }
 
 .modal-content {
-  max-width: 500px;
+  max-width: 600px;
   width: 90%;
-  max-height: 80vh;
+  max-height: 90vh;
   overflow: auto;
   background-color: var(--card-bg);
   border-radius: 8px;
@@ -78,3 +152,148 @@
 .modal-field {
   margin-bottom: 16px;
 }
+
+/* Create Event Button Styles */
+.create-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.create-event-button {
+  padding: 12px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.create-event-button:hover {
+  background-color: var(--primary-color);
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+/* Toast Notification Styles */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  animation: slideInToast 0.3s ease-out;
+  max-width: 300px;
+  word-wrap: break-word;
+}
+
+.toast-success {
+  background-color: var(--success-color);
+}
+
+.toast-error {
+  background-color: var(--danger-color);
+}
+
+@keyframes slideInToast {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Delete Confirmation Modal Styles */
+.delete-modal {
+  max-width: 400px;
+}
+
+.delete-modal-body {
+  margin-bottom: 20px;
+}
+
+.delete-modal-body p {
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.event-preview {
+  background-color: var(--hover-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 16px 0;
+}
+
+.event-preview h3 {
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.event-preview p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.delete-warning {
+  color: var(--danger-color);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.delete-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancel-button {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  background-color: var(--button-bg);
+  color: var(--text-primary);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.cancel-button:hover {
+  background-color: var(--button-hover-bg);
+}
+
+.delete-confirm-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: var(--danger-color);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.delete-confirm-button:hover {
+  background-color: var(--danger-hover-bg);
+  filter: brightness(1.1);
+}
+
+
