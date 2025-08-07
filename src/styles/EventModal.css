@@ -1,0 +1,151 @@
+/* Minimalist EventModal styles - Class-based selectors only */
+
+/* Form container */
+.event-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+/* Form groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+/* Labels */
+.form-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  margin-bottom: 0rem;
+}
+
+/* Input fields */
+.form-input {
+  padding: 0.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 200;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--text-primary);
+}
+
+/* Textarea */
+.form-textarea {
+  padding: 0.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 200;
+  resize: vertical;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--text-primary);
+}
+
+/* Checkbox container */
+.checkbox-label {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+/* Checkbox input */
+.form-checkbox {
+  width: auto;
+  margin: 0;
+}
+
+/* Date picker row - side by side layout */
+.date-picker-row {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+/* Individual date picker group */
+.date-picker-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  flex: 1;
+}
+
+/* Date picker container */
+.date-picker-container {
+  display: flex;
+  justify-content: center;
+  padding: 0.25rem;
+}
+
+/* Date picker input */
+.date-picker {
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  background: transparent;
+  font-size: 0.75rem;
+  width: 100%;
+}
+
+/* Form actions container */
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Button base styles with higher specificity */
+button.save-button,
+button.cancel-button {
+  padding: 0.25rem 0.5rem !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 2px !important;
+  font-size: 0.75rem !important;
+  font-weight: 400 !important;
+  cursor: pointer !important;
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  box-shadow: none !important;
+}
+
+/* Save button with higher specificity */
+button.save-button {
+  border-color: var(--success-color) !important;
+  background-color: var(--success-color) !important;
+  color: white !important;
+}
+
+button.save-button:hover {
+  background-color: white !important;
+  color: var(--success-color) !important;
+  border-color: var(--success-color) !important;
+}
+button.cancel-button {
+    border-color: var(--danger-color) !important;
+    background-color: var(--danger-color) !important;
+    color: white !important;
+  }
+/* Cancel button with higher specificity */
+button.cancel-button:hover {
+  background-color: var(--button-hover-bg) !important;
+  color: var(--text-primary) !important;
+}

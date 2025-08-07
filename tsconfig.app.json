@@ -21,7 +21,18 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Path mapping */
+    "baseUrl": "src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@pages/*": ["pages/*"],
+      "@hooks/*": ["hooks/*"],
+      "@utils/*": ["utils/*"],
+      "@styles/*": ["styles/*"],
+      "@assets/*": ["assets/*"],
+    }
   },
   "include": ["src"]
 }
