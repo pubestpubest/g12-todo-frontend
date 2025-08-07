@@ -1,15 +1,15 @@
 import { useState } from "react";
 import type { Event } from "types/EventType";
-import "@styles/EventAccordian.css";
+import "@styles/EventAccordion.css";
 
-interface EventAccordianProps {
+interface EventAccordionProps {
   event: Event;
   onToggleComplete?: (eventId: number) => void;
   onEdit?: (event: Event) => void;
   onDelete?: (eventId: number) => void;
 }
 
-const EventAccordian: React.FC<EventAccordianProps> = ({ 
+const EventAccordion: React.FC<EventAccordionProps> = ({ 
   event, 
   onToggleComplete, 
   onEdit, 
@@ -44,11 +44,11 @@ const EventAccordian: React.FC<EventAccordianProps> = ({
 
   return (
     <div
-      className={`event-accordian ${event.complete ? "completed" : "pending"} ${isExpanded ? "expanded" : "collapsed"}`}
+      className={`event-accordion ${event.complete ? "completed" : "pending"} ${isExpanded ? "expanded" : "collapsed"}`}
     >
       {/* Always visible header */}
-      <div className="event-accordian-header" onClick={handleToggleExpand}>
-        <div className="event-accordian-main">
+      <div className="event-accordion-header" onClick={handleToggleExpand}>
+        <div className="event-accordion-main">
           <div className="event-title-section">
             <input
               type="checkbox"
@@ -80,7 +80,7 @@ const EventAccordian: React.FC<EventAccordianProps> = ({
 
       {/* Expandable content */}
       {isExpanded && (
-        <div className="event-accordian-expanded">
+        <div className="event-accordion-expanded">
           <hr className="event-divider" />
           {event.description && (
             <div className="event-description-section">
@@ -99,4 +99,4 @@ const EventAccordian: React.FC<EventAccordianProps> = ({
   );
 };
 
-export default EventAccordian;
+export default EventAccordion;

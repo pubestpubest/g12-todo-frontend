@@ -1,6 +1,6 @@
 import "@styles/EventList.css";
 import type { Event } from "types/EventType";
-import EventAccordian from "@components/EventAccordian";
+import EventAccordion from "@components/EventAccordion";
 
 interface EventListProps {
   events: Event[] | null;
@@ -29,7 +29,7 @@ const EventList: React.FC<EventListProps> = ({ events, onToggleComplete, onEdit,
   return (
     <div className="event-list">
       {sortedEvents.map((event) => (
-        <EventAccordian 
+        <EventAccordion 
           key={event.eventId} 
           event={event} 
           onToggleComplete={onToggleComplete}

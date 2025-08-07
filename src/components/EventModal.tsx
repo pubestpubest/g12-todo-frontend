@@ -10,9 +10,10 @@ interface EventModalProps {
   eventData: Event | null;
   onClose: () => void;
   onSave: (updatedEvent: Omit<Event, 'eventId' | 'createdAt' | 'updateAt'>) => void;
+  showToast: (message: string, type?: 'success' | 'error') => void;
 }
 
-export function EventModal({ isOpen, eventData, onClose, onSave }: EventModalProps) {
+export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: EventModalProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
@@ -50,22 +51,48 @@ export function EventModal({ isOpen, eventData, onClose, onSave }: EventModalPro
   }
 
   const handleStartDateChange = (date: Date | null) => {
-    setStartDate(date);
-    console.log('Start date - Display format:', date?.toLocaleString('en-US'));
-    console.log('Start date - API format:', date?.toISOString());
+      setStartDate(date);
   };
 
   const handleEndDateChange = (date: Date | null) => {
     setEndDate(date);
-    console.log('End date - Display format:', date?.toLocaleString('en-US'));
-    console.log('End date - API format:', date?.toISOString());
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!title.trim() || !location.trim() || !startDate || !endDate) {
-      alert("Please fill in all required fields and select valid dates");
+    // Validation with specific error messages
+    if (!title.trim()) {
+      showToast("Please enter an event title", "error");
+      return;
+    }
+    
+    if (!location.trim()) {
+      showToast("Please enter an event location", "error");
+      return;
+    }
+    
+    if (!startDate) {
+      showToast("Please select a start date and time", "error");
+      return;
+    }
+    
+    if (!endDate) {
+      showToast("Please select an end date and time", "error");
+      return;
+    }
+    
+    // Validate that end date is after start date
+    if (endDate <= startDate) {
+      showToast("End date must be after start date", "error");
+      return;
+    }
+    
+    // Validate that the event isn't in the distant past (more than 1 year ago)
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    if (startDate < oneYearAgo) {
+      showToast("Start date cannot be more than one year in the past", "error");
       return;
     }
 

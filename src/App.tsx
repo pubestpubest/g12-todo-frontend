@@ -5,8 +5,16 @@ import EventList from "@components/EventList";
 import { EventModal } from "@components/EventModal";
 import type { Event } from "types/EventType";
 import type { ApiResponse } from "types/ResponseType";
+import type { EventResponseDTO, CreateEventDTO, UpdateEventDTO } from "types/EventDTO";
 import "@styles/App.css";
 import { useAxios } from "@hooks/useAxios";
+import { 
+  eventToCreateDTO, 
+  eventToUpdateDTO, 
+  eventResponseDTOToEvent,
+  eventResponseDTOArrayToEventArray,
+  generateTempEventId 
+} from "@utils/eventMapper";
 
 const App = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -18,7 +26,7 @@ const App = () => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastType, setToastType] = useState<'success' | 'error'>('success');
 
-  const { data: apiResponse, loading, sendRequest } = useAxios<ApiResponse<Event[]>>({
+  const { data: apiResponse, loading, sendRequest } = useAxios<ApiResponse<EventResponseDTO[]>>({
     url: "/api/v1/events",
     method: "GET",
     headers: {
@@ -33,7 +41,9 @@ const App = () => {
   // Update local events state when API response changes
   useEffect(() => {
     if (apiResponse?.data) {
-      setEvents(Array.isArray(apiResponse.data) ? apiResponse.data : []);
+      const eventDTOs = Array.isArray(apiResponse.data) ? apiResponse.data : [];
+      const events = eventResponseDTOArrayToEventArray(eventDTOs);
+      setEvents(events);
     }
   }, [apiResponse]);
 
@@ -74,16 +84,11 @@ const App = () => {
       )
     );
 
-    // Prepare PUT request payload
-    const payload = {
-      title: eventToUpdate.title,
-      description: eventToUpdate.description || "",
-      status: !eventToUpdate.complete, // Toggle the current status
-      location: eventToUpdate.location,
-      startTime: eventToUpdate.startTime,
-      endTime: eventToUpdate.endTime,
-      complete: !eventToUpdate.complete // Toggle the current completion
-    };
+    // Prepare PUT request payload using DTO
+    const payload: UpdateEventDTO = eventToUpdateDTO({
+      ...eventToUpdate,
+      complete: !eventToUpdate.complete // Toggle the completion status
+    });
 
     // Send PUT request to update the entire event
     const response = await updateEvent({
@@ -91,10 +96,45 @@ const App = () => {
       data: payload
     });
     
-    console.log(`PUT /api/v1/events/${eventId}`, payload);
-    
-    // If the request failed (no response), revert local state
-    if (!response && updateError) {
+    // Handle response
+    if (response) {
+      try {
+        // Parse API response - response is AxiosResponse, so we need .data
+        const apiResponse = (response as any).data as ApiResponse<EventResponseDTO>;
+        
+        if (apiResponse.status === 'SUCCESS' && apiResponse.data) {
+          // Success: update local state with real event data from API
+          const updatedEventFromAPI = eventResponseDTOToEvent(apiResponse.data);
+          
+          setEvents(prevEvents => 
+            prevEvents.map(event => 
+              event.eventId === eventId ? updatedEventFromAPI : event
+            )
+          );
+        } else {
+          // API returned non-success status - revert state
+          console.warn('API returned non-success status for toggle:', apiResponse.status);
+          setEvents(prevEvents => 
+            prevEvents.map(event => 
+              event.eventId === eventId 
+                ? eventToUpdate // Revert to original state
+                : event
+            )
+          );
+        }
+      } catch (error) {
+        // Error parsing response - revert state
+        console.error('Error parsing toggle response:', error);
+        setEvents(prevEvents => 
+          prevEvents.map(event => 
+            event.eventId === eventId 
+              ? eventToUpdate // Revert to original state
+              : event
+          )
+        );
+      }
+    } else if (updateError) {
+      // Network/request error - revert local state
       console.error('Failed to update event completion:', updateError);
       setEvents(prevEvents => 
         prevEvents.map(event => 
@@ -151,16 +191,8 @@ const App = () => {
       )
     );
 
-    // Prepare PUT request payload
-    const payload = {
-      title: updatedEventData.title,
-      description: updatedEventData.description || "",
-      status: updatedEventData.complete,
-      location: updatedEventData.location,
-      startTime: updatedEventData.startTime,
-      endTime: updatedEventData.endTime,
-      complete: updatedEventData.complete
-    };
+    // Prepare PUT request payload using DTO
+    const payload: UpdateEventDTO = eventToUpdateDTO(updatedEventData);
 
     // Send PUT request to update the entire event
     const response = await updateEvent({
@@ -168,13 +200,48 @@ const App = () => {
       data: payload
     });
     
-    console.log(`PUT /api/v1/events/${selectedEvent.eventId}`, payload);
-    
     // Handle response
     if (response) {
-      // Success: close modal and show success toast
-      handleCloseEditModal();
-      showToast('Event updated successfully!', 'success');
+      try {
+        // Parse API response - response is AxiosResponse, so we need .data
+        const apiResponse = (response as any).data as ApiResponse<EventResponseDTO>;
+        
+        if (apiResponse.status === 'SUCCESS' && apiResponse.data) {
+          // Success: update local state with real event data from API
+          const updatedEventFromAPI = eventResponseDTOToEvent(apiResponse.data);
+          
+          setEvents(prevEvents => 
+            prevEvents.map(event => 
+              event.eventId === selectedEvent.eventId ? updatedEventFromAPI : event
+            )
+          );
+          
+          handleCloseEditModal();
+          showToast(apiResponse.message || 'Event updated successfully!', 'success');
+        } else {
+          // API returned non-success status
+          console.warn('API returned non-success status:', apiResponse.status);
+          setEvents(prevEvents => 
+            prevEvents.map(event => 
+              event.eventId === selectedEvent.eventId 
+                ? selectedEvent // Revert to original state
+                : event
+            )
+          );
+          showToast(apiResponse.message || 'Failed to update event.', 'error');
+        }
+      } catch (error) {
+        // Error parsing response - revert state
+        console.error('Error parsing update response:', error);
+        setEvents(prevEvents => 
+          prevEvents.map(event => 
+            event.eventId === selectedEvent.eventId 
+              ? selectedEvent // Revert to original state
+              : event
+          )
+        );
+        showToast('Failed to update event. Please try again.', 'error');
+      }
     } else if (updateError) {
       // Error: revert local state and show error toast
       console.error('Failed to update event:', updateError);
@@ -190,16 +257,24 @@ const App = () => {
   };
 
   const handleSaveNewEvent = async (newEventData: Omit<Event, 'eventId' | 'createdAt' | 'updateAt'>) => {
-    // Prepare POST request payload
-    const payload = {
-      title: newEventData.title,
-      description: newEventData.description || "",
-      status: newEventData.complete,
-      location: newEventData.location,
-      startTime: newEventData.startTime,
-      endTime: newEventData.endTime,
-      complete: newEventData.complete
+    // Generate robust temporary ID for optimistic UI update
+    const tempId = generateTempEventId();
+    
+    // Create temporary event for immediate UI feedback
+    const tempEvent: Event = {
+      eventId: tempId,
+      ...newEventData,
+      createdAt: new Date().toISOString(),
+      updateAt: new Date().toISOString()
     };
+    
+    // Add to UI immediately for responsive experience
+    setEvents(prevEvents => [...prevEvents, tempEvent]);
+    handleCloseCreateModal();
+    showToast('Creating event...', 'success');
+
+    // Prepare POST request payload using DTO
+    const payload: CreateEventDTO = eventToCreateDTO(newEventData);
 
     // Send POST request to create new event
     const response = await createEvent({
@@ -207,27 +282,38 @@ const App = () => {
       data: payload
     });
     
-    console.log(`POST /api/v1/events`, payload);
-    
     // Handle response
     if (response) {
-      // Success: close modal, add to local state, and show success toast
-      handleCloseCreateModal();
-      
-      // Create a temporary event object with mock ID for immediate UI update
-      // In real app, the API response would contain the new event with proper ID
-      const tempEvent: Event = {
-        eventId: Date.now(), // Temporary ID, would come from API response
-        ...newEventData,
-        createdAt: new Date().toISOString(),
-        updateAt: new Date().toISOString()
-      };
-      
-      setEvents(prevEvents => [...prevEvents, tempEvent]);
-      showToast('Event created successfully!', 'success');
+      try {
+        // Parse API response - response is AxiosResponse, so we need .data
+        const apiResponse = (response as any).data as ApiResponse<EventResponseDTO>;
+        
+        if (apiResponse.status === 'SUCCESS' && apiResponse.data) {
+          // Success: replace temp event with real event from API
+          const realEvent = eventResponseDTOToEvent(apiResponse.data);
+          
+          setEvents(prevEvents => 
+            prevEvents.map(event => 
+              event.eventId === tempId ? realEvent : event
+            )
+          );
+          showToast(apiResponse.message || 'Event created successfully!', 'success');
+        } else {
+          // API returned non-success status - remove temp event
+          console.warn('API returned non-success status:', apiResponse.status);
+          setEvents(prevEvents => prevEvents.filter(event => event.eventId !== tempId));
+          showToast(apiResponse.message || 'Failed to create event.', 'error');
+        }
+      } catch (error) {
+        // Error parsing response - remove temp event
+        console.error('Error parsing create event response:', error);
+        setEvents(prevEvents => prevEvents.filter(event => event.eventId !== tempId));
+        showToast('Failed to create event. Please try again.', 'error');
+      }
     } else if (createError) {
-      // Error: show error toast, keep modal open
+      // Error: remove temp event and show error
       console.error('Failed to create event:', createError);
+      setEvents(prevEvents => prevEvents.filter(event => event.eventId !== tempId));
       showToast('Failed to create event. Please try again.', 'error');
     }
   };
@@ -259,8 +345,6 @@ const App = () => {
     const response = await deleteEvent({
       url: `/api/v1/events/${eventToDelete.eventId}`
     });
-    
-    console.log(`DELETE /api/v1/events/${eventToDelete.eventId}`);
     
     // Handle response
     if (response) {
@@ -298,6 +382,7 @@ const App = () => {
         eventData={selectedEvent}
         onClose={handleCloseEditModal}
         onSave={handleSaveEvent}
+        showToast={showToast}
       />
       
       {/* Create Event Modal */}
@@ -306,6 +391,7 @@ const App = () => {
         eventData={null}
         onClose={handleCloseCreateModal}
         onSave={handleSaveNewEvent}
+        showToast={showToast}
       />
       
       {/* Delete Confirmation Modal */}
