@@ -27,7 +27,7 @@ const App = () => {
   const [toastType, setToastType] = useState<'success' | 'error'>('success');
 
   const { data: apiResponse, loading, sendRequest } = useAxios<ApiResponse<EventResponseDTO[]>>({
-    url: "/api/v1/events",
+    url: "/api/v1/events?limit=100",
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -370,12 +370,12 @@ const App = () => {
         
         {/* Create Event Button */}
         <div className="create-button-container">
-          <button className="create-event-button" onClick={handleCreateEvent}>
+          <button className="create-event-button" data-test="create-event-button" onClick={handleCreateEvent}>
             ➕ Create New Event
           </button>
         </div>
         
-        {loading ? <p>Loading...</p> : <EventList events={events} onToggleComplete={handleToggleComplete} onEdit={handleEditEvent} onDelete={handleDeleteEvent} />}
+        {loading ? <p data-test="loading-text">Loading...</p> : <EventList events={events} onToggleComplete={handleToggleComplete} onEdit={handleEditEvent} onDelete={handleDeleteEvent} />}
       </div>
       <EventModal 
         isOpen={isEditModalOpen}
@@ -428,7 +428,7 @@ const App = () => {
       )}
 
       {toastMessage && (
-        <div className={`toast toast-${toastType}`}>
+        <div className={`toast toast-${toastType}`} data-test="toast">
           {toastMessage}
         </div>
       )}
