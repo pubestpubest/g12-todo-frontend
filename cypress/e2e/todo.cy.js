@@ -289,50 +289,53 @@ describe("Event List", () => {
   });
 
   it("should edit event", () => {
-    cy.get("[data-test^='event-accordion-']").first().click();
-    cy.get("[data-test='event-description-title']").should("be.visible");
-    cy.get("[data-test='modal-title']").should("not.exist");
-    cy.get('[data-test^="event-accordion-"] > .event-actions > .edit-button')
+    cy.get("[data-test^='event-accordion-']")
       .first()
-      .click();
-    cy.get("[data-test='modal-title']").should("be.visible");
-    const newTitle = "Edited: "+getRandomItem(eventTitles);
-    cy.get("[data-test='title-input']").clear().type(newTitle);
-    cy.get("[data-test='save-button']").click();
-    cy.get("[data-test='modal-title']").should("not.exist");
-    cy.get("[data-test='event-description-title']").should("be.visible");
-    cy.contains(newTitle).should("be.visible");
+      .invoke("attr", "data-test")
+      .then((accordionId) => {
+        const selector = `[data-test='${accordionId}']`;
+        cy.get(selector).click();
+        cy.get("[data-test='event-description-title']").should("be.visible");
+        cy.get("[data-test='modal-title']").should("not.exist");
+        cy.get(`${selector} > .event-actions > .edit-button`).click();
+        cy.get("[data-test='modal-title']").should("be.visible");
+        const newTitle = "Edited: " + getRandomItem(eventTitles);
+        cy.get("[data-test='title-input']").clear().type(newTitle);
+        cy.get("[data-test='save-button']").click();
+        cy.get("[data-test='modal-title']").should("not.exist");
+        cy.get(selector)
+          .find(".event-title")
+          .should("contain", newTitle);
+      });
   });
 
   it("should delete event", () => {
-    cy.get('.stat-card--total > .stat-card__value').invoke('text').then((text) => {
-      const before = Number(text);
-      let firstTitle = "";
-      cy.get('[data-test^="event-accordion-"]')
-        .first()
-        .find('.event-title-section .event-title')
-        .invoke('text')
-        .then(title => {
-          firstTitle = title.trim();
-
-          cy.contains(firstTitle).should("be.visible");
-          cy.get('.modal-header > h2').should("not.exist");
-          cy.get('[data-test^="event-accordion-"] > .event-actions > .delete-button')
-            .first()
-            .click();
-          cy.get('.modal-header > h2').should("be.visible");
-          cy.get('.delete-confirm-button').click();
-          cy.get("[data-test='toast']").should("be.visible");
-          cy.get("[data-test='toast']").should("contain", "Event deleted successfully");
-          cy.wait(4000);
-          cy.get("[data-test='toast']").should("not.exist");
-          cy.contains(firstTitle).should("not.exist");
-          cy.get('.stat-card--total > .stat-card__value').invoke('text').then((text) => {
-            const after = Number(text);
-            expect(after).to.equal(before - 1);
+    cy.get('.stat-card--total > .stat-card__value')
+      .invoke('text')
+      .then((text) => {
+        const before = Number(text);
+        cy.get('[data-test^="event-accordion-"]')
+          .first()
+          .invoke('attr', 'data-test')
+          .then((accordionId) => {
+            const selector = `[data-test='${accordionId}']`;
+            cy.get('.modal-header > h2').should('not.exist');
+            cy.get(`${selector} > .event-actions > .delete-button`).click();
+            cy.get('.modal-header > h2').should('be.visible');
+            cy.get('.delete-confirm-button').click();
+            cy.get("[data-test='toast']").should("be.visible");
+            cy.get("[data-test='toast']").should("contain", "Event deleted successfully");
+            cy.wait(4000);
+            cy.get("[data-test='toast']").should("not.exist");
+            cy.get(selector).should('not.exist');
+            cy.get('.stat-card--total > .stat-card__value')
+              .invoke('text')
+              .then((text) => {
+                const after = Number(text);
+                expect(after).to.equal(before - 1);
+              });
           });
-        });
-    });
+      });
   });
 
 });
