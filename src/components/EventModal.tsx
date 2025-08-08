@@ -9,11 +9,19 @@ interface EventModalProps {
   isOpen: boolean;
   eventData: Event | null;
   onClose: () => void;
-  onSave: (updatedEvent: Omit<Event, 'eventId' | 'createdAt' | 'updateAt'>) => void;
-  showToast: (message: string, type?: 'success' | 'error') => void;
+  onSave: (
+    updatedEvent: Omit<Event, "eventId" | "createdAt" | "updateAt">
+  ) => void;
+  showToast: (message: string, type?: "success" | "error") => void;
 }
 
-export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: EventModalProps) {
+export function EventModal({
+  isOpen,
+  eventData,
+  onClose,
+  onSave,
+  showToast,
+}: EventModalProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
@@ -51,7 +59,7 @@ export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: Ev
   }
 
   const handleStartDateChange = (date: Date | null) => {
-      setStartDate(date);
+    setStartDate(date);
   };
 
   const handleEndDateChange = (date: Date | null) => {
@@ -60,39 +68,31 @@ export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: Ev
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validation with specific error messages
     if (!title.trim()) {
       showToast("Please enter an event title", "error");
       return;
     }
-    
+
     if (!location.trim()) {
       showToast("Please enter an event location", "error");
       return;
     }
-    
+
     if (!startDate) {
       showToast("Please select a start date and time", "error");
       return;
     }
-    
+
     if (!endDate) {
       showToast("Please select an end date and time", "error");
       return;
     }
-    
+
     // Validate that end date is after start date
     if (endDate <= startDate) {
       showToast("End date must be after start date", "error");
-      return;
-    }
-    
-    // Validate that the event isn't in the distant past (more than 1 year ago)
-    const oneYearAgo = new Date();
-    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-    if (startDate < oneYearAgo) {
-      showToast("Start date cannot be more than one year in the past", "error");
       return;
     }
 
@@ -116,12 +116,16 @@ export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: Ev
     <div className="modal-overlay" onClick={onClose}>
       <article className="modal-content" onClick={(e) => e.stopPropagation()}>
         <header className="modal-header">
-          <h2 data-test="modal-title">{eventData ? 'Edit Event' : 'Create New Event'}</h2>
+          <h2 data-test="modal-title">
+            {eventData ? "Edit Event" : "Create New Event"}
+          </h2>
         </header>
 
         <form onSubmit={handleSubmit} className="event-form">
           <div className="form-group">
-            <label className="form-label" htmlFor="title">Title *</label>
+            <label className="form-label" htmlFor="title">
+              Title *
+            </label>
             <input
               className="form-input"
               type="text"
@@ -135,7 +139,9 @@ export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: Ev
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="description">Description</label>
+            <label className="form-label" htmlFor="description">
+              Description
+            </label>
             <textarea
               className="form-textarea"
               id="description"
@@ -148,7 +154,9 @@ export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: Ev
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="location">Location *</label>
+            <label className="form-label" htmlFor="location">
+              Location *
+            </label>
             <input
               className="form-input"
               type="text"
@@ -216,10 +224,19 @@ export function EventModal({ isOpen, eventData, onClose, onSave, showToast }: Ev
           </div>
 
           <div className="form-actions">
-            <button type="button" onClick={handleCancel} className="cancel-button" data-test="cancel-button">
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="cancel-button"
+              data-test="cancel-button"
+            >
               Cancel
             </button>
-            <button type="submit" className="save-button" data-test="save-button">
+            <button
+              type="submit"
+              className="save-button"
+              data-test="save-button"
+            >
               Save Changes
             </button>
           </div>
