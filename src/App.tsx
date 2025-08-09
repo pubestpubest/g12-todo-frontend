@@ -5,15 +5,19 @@ import EventList from "@components/EventList";
 import { EventModal } from "@components/EventModal";
 import type { Event } from "types/EventType";
 import type { ApiResponse } from "types/ResponseType";
-import type { EventResponseDTO, CreateEventDTO, UpdateEventDTO } from "types/EventDTO";
+import type {
+  EventResponseDTO,
+  CreateEventDTO,
+  UpdateEventDTO,
+} from "types/EventDTO";
 import "@styles/App.css";
 import { useAxios } from "@hooks/useAxios";
-import { 
-  eventToCreateDTO, 
-  eventToUpdateDTO, 
+import {
+  eventToCreateDTO,
+  eventToUpdateDTO,
   eventResponseDTOToEvent,
   eventResponseDTOArrayToEventArray,
-  generateTempEventId 
+  generateTempEventId,
 } from "@utils/eventMapper";
 
 const App = () => {
@@ -24,9 +28,13 @@ const App = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [toastType, setToastType] = useState<'success' | 'error'>('success');
+  const [toastType, setToastType] = useState<"success" | "error">("success");
 
-  const { data: apiResponse, loading, sendRequest } = useAxios<ApiResponse<EventResponseDTO[]>>({
+  const {
+    data: apiResponse,
+    loading,
+    sendRequest,
+  } = useAxios<ApiResponse<EventResponseDTO[]>>({
     url: "/api/v1/events?limit=100",
     method: "GET",
     headers: {
@@ -73,13 +81,16 @@ const App = () => {
 
   const handleToggleComplete = async (eventId: number) => {
     // Find the event to update
-    const eventToUpdate = events.find(event => event.eventId === eventId);
+    const eventToUpdate = events.find((event) => event.eventId === eventId);
     if (!eventToUpdate) return;
 
     // Update local state immediately for responsive UI
-    const updatedEvent = { ...eventToUpdate, complete: !eventToUpdate.complete };
-    setEvents(prevEvents => 
-      prevEvents.map(event => 
+    const updatedEvent = {
+      ...eventToUpdate,
+      complete: !eventToUpdate.complete,
+    };
+    setEvents((prevEvents) =>
+      prevEvents.map((event) =>
         event.eventId === eventId ? updatedEvent : event
       )
     );
@@ -87,36 +98,40 @@ const App = () => {
     // Prepare PUT request payload using DTO
     const payload: UpdateEventDTO = eventToUpdateDTO({
       ...eventToUpdate,
-      complete: !eventToUpdate.complete // Toggle the completion status
+      complete: !eventToUpdate.complete, // Toggle the completion status
     });
 
     // Send PUT request to update the entire event
     const response = await updateEvent({
       url: `/api/v1/events/${eventId}`,
-      data: payload
+      data: payload,
     });
-    
+
     // Handle response
     if (response) {
       try {
         // Parse API response - response is AxiosResponse, so we need .data
-        const apiResponse = (response as any).data as ApiResponse<EventResponseDTO>;
-        
-        if (apiResponse.status === 'SUCCESS' && apiResponse.data) {
+        const apiResponse = (response as any)
+          .data as ApiResponse<EventResponseDTO>;
+
+        if (apiResponse.status === "SUCCESS" && apiResponse.data) {
           // Success: update local state with real event data from API
           const updatedEventFromAPI = eventResponseDTOToEvent(apiResponse.data);
-          
-          setEvents(prevEvents => 
-            prevEvents.map(event => 
+
+          setEvents((prevEvents) =>
+            prevEvents.map((event) =>
               event.eventId === eventId ? updatedEventFromAPI : event
             )
           );
         } else {
           // API returned non-success status - revert state
-          console.warn('API returned non-success status for toggle:', apiResponse.status);
-          setEvents(prevEvents => 
-            prevEvents.map(event => 
-              event.eventId === eventId 
+          console.warn(
+            "API returned non-success status for toggle:",
+            apiResponse.status
+          );
+          setEvents((prevEvents) =>
+            prevEvents.map((event) =>
+              event.eventId === eventId
                 ? eventToUpdate // Revert to original state
                 : event
             )
@@ -124,10 +139,10 @@ const App = () => {
         }
       } catch (error) {
         // Error parsing response - revert state
-        console.error('Error parsing toggle response:', error);
-        setEvents(prevEvents => 
-          prevEvents.map(event => 
-            event.eventId === eventId 
+        console.error("Error parsing toggle response:", error);
+        setEvents((prevEvents) =>
+          prevEvents.map((event) =>
+            event.eventId === eventId
               ? eventToUpdate // Revert to original state
               : event
           )
@@ -135,10 +150,10 @@ const App = () => {
       }
     } else if (updateError) {
       // Network/request error - revert local state
-      console.error('Failed to update event completion:', updateError);
-      setEvents(prevEvents => 
-        prevEvents.map(event => 
-          event.eventId === eventId 
+      console.error("Failed to update event completion:", updateError);
+      setEvents((prevEvents) =>
+        prevEvents.map((event) =>
+          event.eventId === eventId
             ? eventToUpdate // Revert to original state
             : event
         )
@@ -164,7 +179,10 @@ const App = () => {
     setIsCreateModalOpen(false);
   };
 
-  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  const showToast = (
+    message: string,
+    type: "success" | "error" = "success"
+  ) => {
     setToastMessage(message);
     setToastType(type);
     // Auto-hide toast after 3 seconds
@@ -173,20 +191,22 @@ const App = () => {
     }, 3000);
   };
 
-  const handleSaveEvent = async (updatedEventData: Omit<Event, 'eventId' | 'createdAt' | 'updateAt'>) => {
+  const handleSaveEvent = async (
+    updatedEventData: Omit<Event, "eventId" | "createdAt" | "updateAt">
+  ) => {
     if (!selectedEvent) return;
 
     // Update local state immediately for responsive UI
-    const updatedEvent = { 
-      ...selectedEvent, 
+    const updatedEvent = {
+      ...selectedEvent,
       ...updatedEventData,
       // Keep the original timestamps
       createdAt: selectedEvent.createdAt,
-      updateAt: new Date().toISOString() // Update the updateAt timestamp
+      updateAt: new Date().toISOString(), // Update the updateAt timestamp
     };
-    
-    setEvents(prevEvents => 
-      prevEvents.map(event => 
+
+    setEvents((prevEvents) =>
+      prevEvents.map((event) =>
         event.eventId === selectedEvent.eventId ? updatedEvent : event
       )
     );
@@ -197,81 +217,89 @@ const App = () => {
     // Send PUT request to update the entire event
     const response = await updateEvent({
       url: `/api/v1/events/${selectedEvent.eventId}`,
-      data: payload
+      data: payload,
     });
-    
+
     // Handle response
     if (response) {
       try {
         // Parse API response - response is AxiosResponse, so we need .data
-        const apiResponse = (response as any).data as ApiResponse<EventResponseDTO>;
-        
-        if (apiResponse.status === 'SUCCESS' && apiResponse.data) {
+        const apiResponse = (response as any)
+          .data as ApiResponse<EventResponseDTO>;
+
+        if (apiResponse.status === "SUCCESS" && apiResponse.data) {
           // Success: update local state with real event data from API
           const updatedEventFromAPI = eventResponseDTOToEvent(apiResponse.data);
-          
-          setEvents(prevEvents => 
-            prevEvents.map(event => 
-              event.eventId === selectedEvent.eventId ? updatedEventFromAPI : event
+
+          setEvents((prevEvents) =>
+            prevEvents.map((event) =>
+              event.eventId === selectedEvent.eventId
+                ? updatedEventFromAPI
+                : event
             )
           );
-          
+
           handleCloseEditModal();
-          showToast(apiResponse.message || 'Event updated successfully!', 'success');
+          showToast(
+            apiResponse.message || "Event updated successfully!",
+            "success"
+          );
         } else {
           // API returned non-success status
-          console.warn('API returned non-success status:', apiResponse.status);
-          setEvents(prevEvents => 
-            prevEvents.map(event => 
-              event.eventId === selectedEvent.eventId 
+          console.warn("API returned non-success status:", apiResponse.status);
+          setEvents((prevEvents) =>
+            prevEvents.map((event) =>
+              event.eventId === selectedEvent.eventId
                 ? selectedEvent // Revert to original state
                 : event
             )
           );
-          showToast(apiResponse.message || 'Failed to update event.', 'error');
+          showToast(apiResponse.message || "Failed to update event.", "error");
         }
       } catch (error) {
         // Error parsing response - revert state
-        console.error('Error parsing update response:', error);
-        setEvents(prevEvents => 
-          prevEvents.map(event => 
-            event.eventId === selectedEvent.eventId 
+        console.error("Error parsing update response:", error);
+        setEvents((prevEvents) =>
+          prevEvents.map((event) =>
+            event.eventId === selectedEvent.eventId
               ? selectedEvent // Revert to original state
               : event
           )
         );
-        showToast('Failed to update event. Please try again.', 'error');
+        showToast("Failed to update event. Please try again.", "error");
       }
     } else if (updateError) {
       // Error: revert local state and show error toast
-      console.error('Failed to update event:', updateError);
-      setEvents(prevEvents => 
-        prevEvents.map(event => 
-          event.eventId === selectedEvent.eventId 
+      console.error("Failed to update event:", updateError);
+      setEvents((prevEvents) =>
+        prevEvents.map((event) =>
+          event.eventId === selectedEvent.eventId
             ? selectedEvent // Revert to original state
             : event
         )
       );
-      showToast('Failed to update event. Please try again.', 'error');
+      showToast("Failed to update event. Please try again.", "error");
     }
   };
 
-  const handleSaveNewEvent = async (newEventData: Omit<Event, 'eventId' | 'createdAt' | 'updateAt'>) => {
+  const handleSaveNewEvent = async (
+    newEventData: Omit<Event, "eventId" | "createdAt" | "updateAt">
+  ) => {
     // Generate robust temporary ID for optimistic UI update
     const tempId = generateTempEventId();
-    
+
     // Create temporary event for immediate UI feedback
     const tempEvent: Event = {
       eventId: tempId,
       ...newEventData,
       createdAt: new Date().toISOString(),
-      updateAt: new Date().toISOString()
+      updateAt: new Date().toISOString(),
     };
-    
+
     // Add to UI immediately for responsive experience
-    setEvents(prevEvents => [...prevEvents, tempEvent]);
+    setEvents((prevEvents) => [...prevEvents, tempEvent]);
     handleCloseCreateModal();
-    showToast('Creating event...', 'success');
+    showToast("Creating event...", "success");
 
     // Prepare POST request payload using DTO
     const payload: CreateEventDTO = eventToCreateDTO(newEventData);
@@ -279,50 +307,60 @@ const App = () => {
     // Send POST request to create new event
     const response = await createEvent({
       url: `/api/v1/events`,
-      data: payload
+      data: payload,
     });
-    
+
     // Handle response
     if (response) {
       try {
         // Parse API response - response is AxiosResponse, so we need .data
-        const apiResponse = (response as any).data as ApiResponse<EventResponseDTO>;
-        
-        if (apiResponse.status === 'SUCCESS' && apiResponse.data) {
+        const apiResponse = (response as any)
+          .data as ApiResponse<EventResponseDTO>;
+
+        if (apiResponse.status === "SUCCESS" && apiResponse.data) {
           // Success: replace temp event with real event from API
           const realEvent = eventResponseDTOToEvent(apiResponse.data);
-          
-          setEvents(prevEvents => 
-            prevEvents.map(event => 
+
+          setEvents((prevEvents) =>
+            prevEvents.map((event) =>
               event.eventId === tempId ? realEvent : event
             )
           );
-          showToast(apiResponse.message || 'Event created successfully!', 'success');
+          showToast(
+            apiResponse.message || "Event created successfully!",
+            "success"
+          );
         } else {
           // API returned non-success status - remove temp event
-          console.warn('API returned non-success status:', apiResponse.status);
-          setEvents(prevEvents => prevEvents.filter(event => event.eventId !== tempId));
-          showToast(apiResponse.message || 'Failed to create event.', 'error');
+          console.warn("API returned non-success status:", apiResponse.status);
+          setEvents((prevEvents) =>
+            prevEvents.filter((event) => event.eventId !== tempId)
+          );
+          showToast(apiResponse.message || "Failed to create event.", "error");
         }
       } catch (error) {
         // Error parsing response - remove temp event
-        console.error('Error parsing create event response:', error);
-        setEvents(prevEvents => prevEvents.filter(event => event.eventId !== tempId));
-        showToast('Failed to create event. Please try again.', 'error');
+        console.error("Error parsing create event response:", error);
+        setEvents((prevEvents) =>
+          prevEvents.filter((event) => event.eventId !== tempId)
+        );
+        showToast("Failed to create event. Please try again.", "error");
       }
     } else if (createError) {
       // Error: remove temp event and show error
-      console.error('Failed to create event:', createError);
-      setEvents(prevEvents => prevEvents.filter(event => event.eventId !== tempId));
-      showToast('Failed to create event. Please try again.', 'error');
+      console.error("Failed to create event:", createError);
+      setEvents((prevEvents) =>
+        prevEvents.filter((event) => event.eventId !== tempId)
+      );
+      showToast("Failed to create event. Please try again.", "error");
     }
   };
 
   const handleDeleteEvent = (eventId: number) => {
     // Find the event to delete and show confirmation modal
-    const event = events.find(event => event.eventId === eventId);
+    const event = events.find((event) => event.eventId === eventId);
     if (!event) return;
-    
+
     setEventToDelete(event);
     setIsDeleteModalOpen(true);
   };
@@ -339,22 +377,26 @@ const App = () => {
     handleCloseDeleteModal();
 
     // Remove from local state immediately for responsive UI
-    setEvents(prevEvents => prevEvents.filter(event => event.eventId !== eventToDelete.eventId));
+    setEvents((prevEvents) =>
+      prevEvents.filter((event) => event.eventId !== eventToDelete.eventId)
+    );
 
     // Send DELETE request
     const response = await deleteEvent({
-      url: `/api/v1/events/${eventToDelete.eventId}`
+      url: `/api/v1/events/${eventToDelete.eventId}`,
     });
-    
+
     // Handle response
     if (response) {
       // Success: show success toast with danger color for delete action
-      showToast('Event deleted successfully!', 'error');
+      showToast("Event deleted successfully!", "error");
     } else if (deleteError) {
       // Error: restore deleted event and show error toast
-      console.error('Failed to delete event:', deleteError);
-      setEvents(prevEvents => [...prevEvents, eventToDelete].sort((a, b) => a.eventId - b.eventId));
-      showToast('Failed to delete event. Please try again.', 'error');
+      console.error("Failed to delete event:", deleteError);
+      setEvents((prevEvents) =>
+        [...prevEvents, eventToDelete].sort((a, b) => a.eventId - b.eventId)
+      );
+      showToast("Failed to delete event. Please try again.", "error");
     }
   };
 
@@ -365,42 +407,62 @@ const App = () => {
   return (
     <>
       <NavBar />
-      <div className="app-container" >
-        <DashboardHeader total={total} completed={completed} pending={pending} />
-        
+      <div className="app-container">
+        <DashboardHeader
+          total={total}
+          completed={completed}
+          pending={pending}
+        />
+
         {/* Create Event Button */}
         <div className="create-button-container">
-          <button className="create-event-button" data-test="create-event-button" onClick={handleCreateEvent}>
-            ➕ Create New Event
+          <button
+            className="create-event-button"
+            data-test="create-event-button"
+            onClick={handleCreateEvent}
+          >
+            ➕ สร้างกิจกรรมใหม่
           </button>
         </div>
-        
-        {loading ? <p data-test="loading-text">Loading...</p> : <EventList events={events} onToggleComplete={handleToggleComplete} onEdit={handleEditEvent} onDelete={handleDeleteEvent} />}
+
+        {loading ? (
+          <p data-test="loading-text">Loading...</p>
+        ) : (
+          <EventList
+            events={events}
+            onToggleComplete={handleToggleComplete}
+            onEdit={handleEditEvent}
+            onDelete={handleDeleteEvent}
+          />
+        )}
       </div>
-      <EventModal 
+      <EventModal
         isOpen={isEditModalOpen}
         eventData={selectedEvent}
         onClose={handleCloseEditModal}
         onSave={handleSaveEvent}
         showToast={showToast}
       />
-      
+
       {/* Create Event Modal */}
-      <EventModal 
+      <EventModal
         isOpen={isCreateModalOpen}
         eventData={null}
         onClose={handleCloseCreateModal}
         onSave={handleSaveNewEvent}
         showToast={showToast}
       />
-      
+
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content delete-modal">
             <div className="modal-header">
               <h2>Delete Event</h2>
-              <button className="modal-close-button" onClick={handleCloseDeleteModal}>
+              <button
+                className="modal-close-button"
+                onClick={handleCloseDeleteModal}
+              >
                 ✕
               </button>
             </div>
@@ -416,10 +478,16 @@ const App = () => {
               <p className="delete-warning">This action cannot be undone.</p>
             </div>
             <div className="delete-modal-actions">
-              <button className="cancel-button" onClick={handleCloseDeleteModal}>
+              <button
+                className="cancel-button"
+                onClick={handleCloseDeleteModal}
+              >
                 Cancel
               </button>
-              <button className="delete-confirm-button" onClick={handleConfirmDelete}>
+              <button
+                className="delete-confirm-button"
+                onClick={handleConfirmDelete}
+              >
                 Delete Event
               </button>
             </div>
